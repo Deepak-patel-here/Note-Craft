@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 object ApiClient{
-    private val apiKey=""
+    private val apiKey="AIzaSyCKrjUbuuVcdJlRCK1yq1bAQUoV47NVgPE"
     val client: HttpClient= HttpClient{
         install(ContentNegotiation){
             json(json = Json{ignoreUnknownKeys=true})
@@ -48,7 +48,7 @@ object ApiClient{
                 Content(
                     parts = listOf(
                         Part(
-                            text = "Translate the following in $language , $content"
+                            text = "Translate the following in $language \n\n $content"
                         )
                     )
                 )

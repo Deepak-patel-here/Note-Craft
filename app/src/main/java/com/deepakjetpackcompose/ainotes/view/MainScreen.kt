@@ -36,8 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 
-//STEP 1:first chnge the navigationdestion apply navigation using arguments,
-//step 2:
+
 const val FOR_ADD: Int=1
 const val FOR_UPDATE: Int=2
 const val idI=0
