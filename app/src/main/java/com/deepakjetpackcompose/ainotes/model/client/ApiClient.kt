@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 object ApiClient{
-    private val apiKey="AIzaSyCKrjUbuuVcdJlRCK1yq1bAQUoV47NVgPE"
+    private val apiKey=""
     val client: HttpClient= HttpClient{
         install(ContentNegotiation){
             json(json = Json{ignoreUnknownKeys=true})
