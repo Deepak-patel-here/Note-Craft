@@ -1,5 +1,6 @@
 package com.deepakjetpackcompose.ainotes.view
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,37 +46,56 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun AddOrEditScreen(notesViewmodel: NotesViewmodel,navController: NavController,modifier: Modifier = Modifier) {
-    var title by remember { mutableStateOf("") }
-    var content by remember { mutableStateOf("") }
-    val context= LocalContext.current
+fun AddOrEditScreen(
+    notesViewmodel: NotesViewmodel,
+    id:Int?,
+    title1:String,
+    desc1:String,
+    type:Int,
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
 
-        Column (modifier=modifier.fillMaxSize()
+    val decodeTitle= Uri.decode(title1)
+    val decodeContent= Uri.decode(desc1)
+    var title by remember { mutableStateOf(decodeTitle) }
+    var content by remember { mutableStateOf(decodeContent) }
+    val context = LocalContext.current
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
-            .padding(horizontal = 16.dp)){
+            .padding(horizontal = 16.dp)
+    ) {
 
-            Row(modifier= Modifier.fillMaxWidth().padding(vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable(onClick = {
-                            navController.popBackStack()
-                        })
-                )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(onClick = {
+                        navController.popBackStack()
+                    })
+            )
 
-                Icon(
-                    imageVector = Icons.Default.Done,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable(onClick = {
-                            if(title.isNotEmpty() && content.isNotEmpty()) {
+            Icon(
+                imageVector = Icons.Default.Done,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(onClick = {
+                        if (title.isNotEmpty() && content.isNotEmpty()) {
+                            if(type==1){
                                 notesViewmodel.addNotes(
                                     notes = Notes(
                                         title = title,
@@ -83,55 +103,76 @@ fun AddOrEditScreen(notesViewmodel: NotesViewmodel,navController: NavController,
                                         timeStamp = System.currentTimeMillis()
                                     )
                                 )
-                            }else{
-                                Toast.makeText(context,"Please fill the fields",Toast.LENGTH_SHORT).show()
                             }
-                            navController.popBackStack()
-                        })
-                )
-            }
-            Spacer(Modifier.height(5.dp))
+                            else{
+                                notesViewmodel.updateNotes(
+                                    notes = Notes(
+                                        id = id?:0,
+                                        title = title,
+                                        content = content,
+                                        timeStamp = System.currentTimeMillis()
+                                    )
+                                )
+                            }
 
-            OutlinedTextField(
-                value = title,
-                onValueChange = {title=it},
-                placeholder = { Text("Note Title", fontFamily = UbuntuFont, fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold) },
-                colors = TextFieldDefaults.colors(
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface,
-                    focusedTextColor = MaterialTheme.colorScheme.onSurface
-                ),
-                textStyle = TextStyle(
-                    fontSize = 26.sp,
-                    fontFamily = UbuntuFont,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-
-            OutlinedTextField(
-                value = content,
-                onValueChange = {content=it},
-                placeholder = { Text("Note Description", fontFamily = UbuntuFont, fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal) },
-                colors = TextFieldDefaults.colors(
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface,
-                    focusedTextColor = MaterialTheme.colorScheme.onSurface
-                ),
-                textStyle = TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = UbuntuFont,
-                    fontWeight = FontWeight.Normal
-                )
+                        } else {
+                            Toast.makeText(context, "Please fill the fields", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        navController.popBackStack()
+                    })
             )
         }
+        Spacer(Modifier.height(5.dp))
+
+        OutlinedTextField(
+            value = title,
+            onValueChange = { title = it },
+            placeholder = {
+                Text(
+                    "Note Title", fontFamily = UbuntuFont, fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            colors = TextFieldDefaults.colors(
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
+            textStyle = TextStyle(
+                fontSize = 26.sp,
+                fontFamily = UbuntuFont,
+                fontWeight = FontWeight.Bold
+            )
+        )
+
+        OutlinedTextField(
+            value = content,
+            onValueChange = { content = it },
+            placeholder = {
+                Text(
+                    "Note Description", fontFamily = UbuntuFont, fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = TextFieldDefaults.colors(
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
+            textStyle = TextStyle(
+                fontSize = 16.sp,
+                fontFamily = UbuntuFont,
+                fontWeight = FontWeight.Normal
+            )
+        )
+    }
 
 
 }

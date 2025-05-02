@@ -33,9 +33,9 @@ class NotesViewmodel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun updateNotes(notes: Notes,title:String,content:String,timeStamp: Long){
+    fun updateNotes(notes: Notes){
         viewModelScope.launch{
-            val updatedNotes=notes.copy(title = title, content = content, timeStamp = timeStamp)
+            val updatedNotes=notes.copy()
             notesRepository.update(updatedNotes)
         }
     }

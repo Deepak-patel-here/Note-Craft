@@ -1,5 +1,6 @@
 package com.deepakjetpackcompose.ainotes.view
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -37,13 +38,16 @@ import androidx.compose.ui.res.painterResource
 
 //STEP 1:first chnge the navigationdestion apply navigation using arguments,
 //step 2:
+const val FOR_ADD: Int=1
+const val FOR_UPDATE: Int=2
+const val idI=0
 @Composable
 fun MainScreen(notesViewmodel: NotesViewmodel,navController: NavController,modifier: Modifier = Modifier) {
     val allNotes=notesViewmodel.allTask.collectAsState(initial = emptyList<Notes>())
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate(NavigationDestination.AddOrUpdate.routes)
+                navController.navigate("${NavigationDestination.AddOrUpdate.routes}?title=&description=&type=$FOR_ADD&id=$idI")
             },
                 containerColor = MaterialTheme.colorScheme.primaryContainer) {
                 Icon(
@@ -77,8 +81,10 @@ fun MainScreen(notesViewmodel: NotesViewmodel,navController: NavController,modif
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(allNotes.value) { note ->
+                        val encodedTitle = Uri.encode(note.title)
+                        val encodedDescription = Uri.encode(note.content)
                         NotePreview(onClick2 = {
-                            navController.navigate(NavigationDestination.AddOrUpdate.routes)
+                            navController.navigate("${NavigationDestination.AddOrUpdate.routes}?title=$encodedTitle&description=$encodedDescription&type=$FOR_UPDATE&id=${note.id}")
                         }, onClick = { notesViewmodel.deleteNotes(note) }, notes = note)
                     }
                 }
