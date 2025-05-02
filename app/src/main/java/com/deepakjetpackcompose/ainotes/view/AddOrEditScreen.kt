@@ -49,7 +49,7 @@ fun AddOrEditScreen(notesViewmodel: NotesViewmodel,navController: NavController,
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
     val context= LocalContext.current
-    AiNotes {
+
         Column (modifier=modifier.fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .padding(horizontal = 16.dp)){
@@ -132,7 +132,7 @@ fun AddOrEditScreen(notesViewmodel: NotesViewmodel,navController: NavController,
                 )
             )
         }
-    }
+
 
 }
 

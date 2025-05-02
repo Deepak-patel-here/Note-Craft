@@ -39,7 +39,7 @@ fun NotePreview(onClick2:()->Unit,onClick:()-> Unit,notes: Notes, modifier: Modi
     val content = if(notes.content.length>100) notes.content.substring(0,101)+"..." else notes.content
     val time=notes.timeStamp
 
-    AiNotes {
+
         Surface (
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,7 +97,7 @@ fun NotePreview(onClick2:()->Unit,onClick:()-> Unit,notes: Notes, modifier: Modi
 
             }
         }
-    }
+
 }
 
 @Preview

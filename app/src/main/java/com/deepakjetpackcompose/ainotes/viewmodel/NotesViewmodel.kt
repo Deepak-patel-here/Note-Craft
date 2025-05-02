@@ -8,11 +8,16 @@ import com.deepakjetpackcompose.ainotes.model.repository.ApiRepository
 import com.deepakjetpackcompose.ainotes.model.repository.NotesRepository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class NotesViewmodel(application: Application): AndroidViewModel(application) {
     private val notesRepository= NotesRepository(application)
     private val apiRepository= ApiRepository()
+    private val _isDark= MutableStateFlow<Boolean>(false)
+    val isDark: StateFlow<Boolean> = _isDark.asStateFlow()
 
     val allTask: Flow<List<Notes>> =notesRepository.allTask
 
@@ -51,5 +56,9 @@ class NotesViewmodel(application: Application): AndroidViewModel(application) {
                 ?: "No Translation found for $lang"
         }
         return ans
+    }
+
+    fun toggleDarkMode(){
+        _isDark.value = ! _isDark.value
     }
 }

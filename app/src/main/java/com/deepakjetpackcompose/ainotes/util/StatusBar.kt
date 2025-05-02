@@ -9,8 +9,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 fun SetStatusBarColor(color:androidx.compose.ui.graphics.Color) {
     val systemUiController = rememberSystemUiController()
 
-    systemUiController.setStatusBarColor(
+    systemUiController.setSystemBarsColor(
         color = color,
-        darkIcons = color.luminance() > 0.5f // dark icons if background is light
+        darkIcons = color.luminance() > 0.5f
     )
 }

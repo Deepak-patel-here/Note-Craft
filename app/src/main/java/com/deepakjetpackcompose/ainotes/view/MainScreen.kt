@@ -54,7 +54,7 @@ fun MainScreen(notesViewmodel: NotesViewmodel,navController: NavController,modif
             }
         },
         topBar = {
-            TopBar(modifier=Modifier.statusBarsPadding())
+            TopBar(notesViewmodel=notesViewmodel,modifier=Modifier.statusBarsPadding())
         }
     ) {innerPadding->
         Column (modifier=modifier
