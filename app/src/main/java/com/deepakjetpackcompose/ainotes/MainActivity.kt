@@ -28,9 +28,9 @@ class MainActivity : ComponentActivity() {
             val notesViewmodel: NotesViewmodel by viewModels()
             val isDark = notesViewmodel.isDark.collectAsState()
             AiNotes(darkTheme = isDark.value) {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NavigationHelper(notesViewmodel=notesViewmodel,modifier = Modifier.padding(innerPadding))
-                }
+
+                    NavigationHelper(notesViewmodel=notesViewmodel,modifier = Modifier.fillMaxSize())
+
             }
         }
     }

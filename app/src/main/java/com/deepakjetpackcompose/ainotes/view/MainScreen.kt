@@ -30,11 +30,16 @@ import com.deepakjetpackcompose.ainotes.util.TopBar
 import com.deepakjetpackcompose.ainotes.viewmodel.NotesViewmodel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.sp
+import com.deepakjetpackcompose.ainotes.ui.theme.UbuntuFont
 
 
 const val FOR_ADD: Int=1
@@ -63,19 +68,29 @@ fun MainScreen(notesViewmodel: NotesViewmodel,navController: NavController,modif
         Column (modifier=modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
+            .padding(innerPadding)
             .padding(horizontal = 20.dp)){
             if(allNotes.value.isEmpty()){
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                Column(modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center){
                     Image(
                         painter = painterResource(R.drawable.empty),
                         contentDescription = null,
                         modifier = Modifier.size(80.dp).alpha(0.7f)
                     )
+                    Spacer(Modifier.height(7.dp))
+                    Text("No notes here yet",
+                        fontFamily = UbuntuFont,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 12.sp,
+                        modifier= Modifier.alpha(0.6f)
+                    )
                 }
             }else {
                 LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Fixed(2),
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    modifier = Modifier.fillMaxSize(),
                     verticalItemSpacing = 12.dp,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {

@@ -26,7 +26,6 @@ class NotesViewmodel(application: Application): AndroidViewModel(application) {
     private val _fetch= MutableStateFlow<ApiState>(ApiState.UnLoading)
     val fetch: StateFlow<ApiState> = _fetch.asStateFlow()
     var translatedText = mutableStateOf("")
-
     val summariesText = mutableStateOf("")
 
 
