@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -264,116 +265,128 @@ fun AddOrEditScreen(
                         .padding(horizontal = 5.dp),
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.volume),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clickable(onClick = {
-                                tts?.speak(content.text, TextToSpeech.QUEUE_FLUSH, null, null)
-                            }),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    IconButton(onClick = {
+                        tts?.speak(content.text, TextToSpeech.QUEUE_FLUSH, null, null)
+                    }) {
+                        Icon(
+                            painter = painterResource(R.drawable.volume),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(30.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                     if (isLoading == ApiState.Summary) {
                         CircularProgressIndicator(Modifier.size(30.dp))
                     } else {
-                        Icon(
-                            painter = painterResource(R.drawable.tool),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp)
-                                .clickable(onClick = {
-                                    try {
-                                        val selected=content.selection
-                                        if(selected.start != selected.end) {
-                                            val selectedText = content.text.substring(selected.start, selected.end)
-                                            notesViewmodel.getSummaries(content = selectedText)
-                                        }
-                                        else{
-                                            Toast.makeText(
-                                                context,
-                                                "Please selected some text. ",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-                                    } catch (e: Exception) {
-                                        Toast.makeText(
-                                            context,
-                                            "not connected to Internet ",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                }),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                        IconButton(onClick = {
+                            try {
+                                val selected = content.selection
+                                if (selected.start != selected.end) {
+                                    val selectedText = content.text.substring(
+                                        selected.start,
+                                        selected.end
+                                    )
+                                    notesViewmodel.getSummaries(content = selectedText)
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Please selected some text. ",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                    context,
+                                    "not connected to Internet ",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(R.drawable.tool),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
 
                     if (isLoading == ApiState.Translate) {
                         CircularProgressIndicator(Modifier.size(30.dp))
                     } else {
-                        Icon(
-                            painter = painterResource(R.drawable.languageone),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(30.dp)
-                                .clickable(onClick = {
-                                    try {
-                                        val selected=content.selection
-                                        if(selected.start != selected.end) {
-                                            val selectedText = content.text.substring(selected.start, selected.end)
-                                            isShow=true
-                                        Log.d("translate", selectedText.toString())
-                                        }else{
-                                            Toast.makeText(
-                                                context,
-                                                "Please selected some text. ",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-                                        Log.d("translate", translatedText)
-                                    } catch (e: Exception) {
-                                        Toast.makeText(
-                                            context,
-                                            "not connected to Internet ",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                }),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                        IconButton(onClick = {
+                            try {
+                                val selected = content.selection
+                                if (selected.start != selected.end) {
+                                    val selectedText = content.text.substring(
+                                        selected.start,
+                                        selected.end
+                                    )
+                                    isShow = true
+                                    Log.d("translate", selectedText.toString())
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Please selected some text. ",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                                Log.d("translate", translatedText)
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                    context,
+                                    "not connected to Internet ",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(R.drawable.languageone),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(30.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
 
 
                     if (isLoading == ApiState.Meaning) {
                         CircularProgressIndicator(Modifier.size(30.dp))
+
                     } else {
-                        Icon(
-                            painter = painterResource(R.drawable.book),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp)
-                                .clickable(onClick = {
-                                    try {
-                                        val selected=content.selection
-                                        if(selected.start != selected.end) {
-                                            val selectedText = content.text.substring(selected.start, selected.end)
-                                            notesViewmodel.getMeaning(selectedText)
-                                        }
-                                        else{
-                                            Toast.makeText(
-                                                context,
-                                                "Please selected some text. ",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-                                    } catch (e: Exception) {
-                                        Toast.makeText(
-                                            context,
-                                            "not connected to Internet ",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                }),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                        IconButton(onClick = {
+                            try {
+                                val selected = content.selection
+                                if (selected.start != selected.end) {
+                                    val selectedText = content.text.substring(
+                                        selected.start,
+                                        selected.end
+                                    )
+                                    notesViewmodel.getMeaning(selectedText)
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Please selected some text. ",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                    context,
+                                    "not connected to Internet ",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(R.drawable.book),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
 
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -78,18 +79,20 @@ fun TopBar(notesViewmodel: NotesViewmodel,modifier: Modifier = Modifier) {
                     fontSize = 30.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Icon(
-                    painter = painterResource(darkImg),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .graphicsLayer(rotationZ = rotation)
-                        .clickable(onClick = {
-                        rotate= !rotate
-                        isRotating=true
-                    })
-                        .size(30.dp)
-                )
+                IconButton(onClick = {
+                    rotate= !rotate
+                    isRotating=true
+                }) {
+                    Icon(
+                        painter = painterResource(darkImg),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .graphicsLayer(rotationZ = rotation)
+                            .size(30.dp)
+                    )
+                }
+
             }
 
             OutlinedTextField(
