@@ -27,6 +27,7 @@ class NotesViewmodel(application: Application): AndroidViewModel(application) {
     val fetch: StateFlow<ApiState> = _fetch.asStateFlow()
     var translatedText = mutableStateOf("")
     val summariesText = mutableStateOf("")
+    var meaningText= mutableStateOf("")
 
 
     val allTask: Flow<List<Notes>> =notesRepository.allTask
@@ -77,6 +78,20 @@ class NotesViewmodel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun getMeaning(word: String){
+        _fetch.value= ApiState.Meaning
+        var ans=""
+        viewModelScope.launch {
+
+            ans= apiRepository.getMeaning(word =word).candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
+                ?: "No meaning found."
+
+            meaningText.value=ans
+            _fetch.value= ApiState.UnLoading
+
+        }
+    }
+
     fun toggleDarkMode(){
         _isDark.value = ! _isDark.value
     }
@@ -85,6 +100,7 @@ sealed class ApiState(){
     object Summary: ApiState()
     object Translate: ApiState()
     object UnLoading: ApiState()
+    object Meaning : ApiState()
 
 }
 

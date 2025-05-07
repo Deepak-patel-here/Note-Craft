@@ -90,6 +90,7 @@ fun AddOrEditScreen(
     var isShow by remember { mutableStateOf(false) }
     val languages = listOf("Hindi", "English", "Spanish", "French","Japanese","Sanskrit","Korean")
     var selectedLanguage = remember { mutableStateOf(languages[0]) }
+    val meaningText by notesViewmodel.meaningText
 
 
     DisposableEffect(Unit) {
@@ -103,6 +104,15 @@ fun AddOrEditScreen(
             tts?.shutdown()
         }
     }
+    LaunchedEffect(meaningText) {
+        if (meaningText.isNotEmpty()) {
+            content = content.copy(
+                text = content.text + "\n\n" + meaningText
+            )
+            notesViewmodel.meaningText.value=""
+        }
+    }
+
     LaunchedEffect(summaryText) {
         if (summaryText.isNotEmpty()) {
             content = content.copy(
@@ -320,6 +330,40 @@ fun AddOrEditScreen(
                                             ).show()
                                         }
                                         Log.d("translate", translatedText)
+                                    } catch (e: Exception) {
+                                        Toast.makeText(
+                                            context,
+                                            "not connected to Internet ",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                }),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+
+                    if (isLoading == ApiState.Meaning) {
+                        CircularProgressIndicator(Modifier.size(30.dp))
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.book),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                                .clickable(onClick = {
+                                    try {
+                                        val selected=content.selection
+                                        if(selected.start != selected.end) {
+                                            val selectedText = content.text.substring(selected.start, selected.end)
+                                            notesViewmodel.getMeaning(selectedText)
+                                        }
+                                        else{
+                                            Toast.makeText(
+                                                context,
+                                                "Please selected some text. ",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
                                     } catch (e: Exception) {
                                         Toast.makeText(
                                             context,

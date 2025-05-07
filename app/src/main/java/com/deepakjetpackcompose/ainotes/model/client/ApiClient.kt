@@ -1,5 +1,7 @@
 package com.deepakjetpackcompose.ainotes.model.client
 
+
+import com.deepakjetpackcompose.ainotes.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -12,8 +14,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
+
 object ApiClient{
-    private val apiKey=""
+    val apiKey =BuildConfig.API_KEY
     val client: HttpClient= HttpClient{
         install(ContentNegotiation){
             json(json = Json{ignoreUnknownKeys=true})
@@ -63,6 +66,32 @@ object ApiClient{
             println("Status: ${response.status}")
             println("Response Text: ${response.bodyAsText()}")
              response.body<GeminiResponse>()
+        }catch (e : Exception){
+            GeminiResponse(null)
+        }
+    }
+
+    suspend fun getMeaning(content:String):GeminiResponse{
+        val request = GeminiRequest(
+            contents = listOf(
+                Content(
+                    parts = listOf(
+                        Part(
+                            text = "Explain the meaning of this word $content\n\n only explain the meaning in one line and 1 example."
+                        )
+                    )
+                )
+            )
+        )
+        return try {
+            val response =
+                client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey") {
+                    contentType(ContentType.Application.Json)
+                    setBody(request)
+                }
+            println("Status: ${response.status}")
+            println("Response Text: ${response.bodyAsText()}")
+            response.body<GeminiResponse>()
         }catch (e : Exception){
             GeminiResponse(null)
         }

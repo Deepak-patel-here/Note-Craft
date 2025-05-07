@@ -12,4 +12,8 @@ class ApiRepository {
     suspend fun getTranslation(content:String,lang:String): GeminiResponse{
         return ApiClient.getTranslation(content = content, language = lang)
     }
+
+    suspend fun getMeaning(word:String): GeminiResponse{
+        return ApiClient.getMeaning(content = word)
+    }
 }
