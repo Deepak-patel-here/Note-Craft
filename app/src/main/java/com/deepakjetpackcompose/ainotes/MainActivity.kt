@@ -23,14 +23,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        installSplashScreen()
         setContent {
             val notesViewmodel: NotesViewmodel by viewModels()
             val isDark = notesViewmodel.isDark.collectAsState()
             AiNotes(darkTheme = isDark.value) {
-
                     NavigationHelper(notesViewmodel=notesViewmodel,modifier = Modifier.fillMaxSize())
-
             }
         }
     }
