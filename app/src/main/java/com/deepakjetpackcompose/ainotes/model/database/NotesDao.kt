@@ -22,5 +22,10 @@ interface NotesDao {
     @Query("SELECT * FROM notes_table")
     fun getAllNotes(): Flow<List<Notes>>
 
+    @Query("SELECT * FROM notes_table WHERE title LIKE '%' || :title || '%'")
+    fun searchNotes(title: String): Flow<List<Notes>>
+
+
+
 
 }

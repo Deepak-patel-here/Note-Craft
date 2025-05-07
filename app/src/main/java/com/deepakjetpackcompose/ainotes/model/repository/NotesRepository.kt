@@ -20,4 +20,7 @@ class NotesRepository(application: Application) {
         notesDao.updateNotes(notes)
     }
 
+    fun searchNotes(query: String): Flow<List<Notes>> = notesDao.searchNotes(query)
+
+
 }

@@ -47,7 +47,7 @@ const val FOR_UPDATE: Int=2
 const val idI=0
 @Composable
 fun MainScreen(notesViewmodel: NotesViewmodel,navController: NavController,modifier: Modifier = Modifier) {
-    val allNotes=notesViewmodel.allTask.collectAsState(initial = emptyList<Notes>())
+    val allNotes=notesViewmodel.searchNotes.collectAsState()
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {

@@ -1,5 +1,7 @@
 package com.deepakjetpackcompose.ainotes.util
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,14 +44,25 @@ import com.deepakjetpackcompose.ainotes.viewmodel.NotesViewmodel
 
 @Composable
 fun TopBar(notesViewmodel: NotesViewmodel,modifier: Modifier = Modifier) {
+    val query=notesViewmodel.searchQuery.collectAsState()
     val isDark=notesViewmodel.isDark.collectAsState()
+    var rotate by remember { mutableStateOf(false) }
+    var isRotating by remember { mutableStateOf(false) }
     val darkImg=if(isDark.value){
         R.drawable.moon
     }else{
         R.drawable.sun
     }
+
+    val rotation by animateFloatAsState(
+        targetValue = if(rotate)360F else 0F,
+        animationSpec = tween(durationMillis = 400),
+        finishedListener = {
+            notesViewmodel.toggleDarkMode()
+            isRotating=false
+        }
+    )
     SetStatusBarColor(color = MaterialTheme.colorScheme.surfaceContainerLow)
-    var input by remember { mutableStateOf("") }
 
         Column(
             modifier = modifier.fillMaxWidth()
@@ -68,16 +82,19 @@ fun TopBar(notesViewmodel: NotesViewmodel,modifier: Modifier = Modifier) {
                     painter = painterResource(darkImg),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.clickable(onClick = {
-                        notesViewmodel.toggleDarkMode()
+                    modifier = Modifier
+                        .graphicsLayer(rotationZ = rotation)
+                        .clickable(onClick = {
+                        rotate= !rotate
+                        isRotating=true
                     })
                         .size(30.dp)
                 )
             }
 
             OutlinedTextField(
-                value = input,
-                onValueChange = { input = it },
+                value = query.value,
+                onValueChange = notesViewmodel::updateSearchQuery,
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth()

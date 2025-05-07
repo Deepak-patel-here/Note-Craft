@@ -13,8 +13,12 @@ import com.deepakjetpackcompose.ainotes.model.repository.NotesRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -28,9 +32,22 @@ class NotesViewmodel(application: Application): AndroidViewModel(application) {
     var translatedText = mutableStateOf("")
     val summariesText = mutableStateOf("")
     var meaningText= mutableStateOf("")
-
-
     val allTask: Flow<List<Notes>> =notesRepository.allTask
+
+
+    private val _searchQuery= MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
+    val searchNotes: StateFlow<List<Notes>> = _searchQuery
+        .debounce(300)
+        .flatMapLatest { query->
+            if(query.isBlank()){
+                allTask
+            }else{
+                notesRepository.searchNotes(query = query)
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+
 
     fun addNotes(notes: Notes){
         viewModelScope.launch {
@@ -49,6 +66,10 @@ class NotesViewmodel(application: Application): AndroidViewModel(application) {
             val updatedNotes=notes.copy()
             notesRepository.update(updatedNotes)
         }
+    }
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
     }
 
     fun getSummaries(content: String){
